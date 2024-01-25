@@ -7,5 +7,5 @@ resolver = "2"
 members = [
     "webapp/axum_htmx",
     "webapp/yew_csr",
-    "api",
+    "api", "macro_utils",
 ]

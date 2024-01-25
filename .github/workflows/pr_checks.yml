@@ -1,10 +1,9 @@
-name: pr_check
+name: Pull Request Checks
 
 on:
   workflow_dispatch:
-  push:
   pull_request:
-    branches: [ master ]
+    branches: [main]
 
 env:
   CARGO_TERM_COLOR: always
@@ -14,146 +13,188 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Clippy for API
-      run: cargo clippy --package api
+      - name: Clippy for API
+        run: cargo clippy --package api
+
+  clippy-macro_utils:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: Clippy for macro_utils
+        run: cargo clippy --package macro_utils
 
   clippy-webapp-yew:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Clippy for Webapp
-      run: cargo clippy --package yew_csr
+      - name: Clippy for Webapp
+        run: cargo clippy --package yew_csr
 
   clippy-webapp-axum:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Clippy for Webapp
-      run: cargo clippy --package axum_htmx
+      - name: Clippy for Webapp
+        run: cargo clippy --package axum_htmx
 
   build-api:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Build API
-      run: cargo build --package api
+      - name: Build API
+        run: cargo build --package api
 
   build-webapp-yew:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        target: wasm32-unknown-unknown
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          target: wasm32-unknown-unknown
+          toolchain: stable
 
-    - name: Install trunk from crates.io
-      uses: baptiste0928/cargo-install@v2
-      with:
-        crate: trunk
+      - name: Install trunk from crates.io
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: trunk
 
-    - name: Install wasm-bindgen-cli from crates.io
-      uses: baptiste0928/cargo-install@v2
-      with:
-        crate: wasm-bindgen-cli
+      - name: Install wasm-bindgen-cli from crates.io
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: wasm-bindgen-cli
 
-    - name: Build Webapp
-      working-directory: ./webapp/yew_csr
-      run: trunk build
+      - name: Build Webapp
+        working-directory: ./webapp/yew_csr
+        run: trunk build
 
   build-webapp-axum:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Build Webapp
-      run: cargo build --package axum_htmx
+      - name: Build Webapp
+        run: cargo build --package axum_htmx
+
+  build-macro_utils:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: Build macro_utils
+        run: cargo build --package macro_utils
 
   test-api:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Test API
-      run: cargo test --package api
+      - name: Test API
+        run: cargo test --package api
 
   test-webapp-yew:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Install trunk from crates.io
-      uses: baptiste0928/cargo-install@v2
-      with:
-        crate: trunk
+      - name: Install trunk from crates.io
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: trunk
 
-    - name: Install wasm-bindgen-cli from crates.io
-      uses: baptiste0928/cargo-install@v2
-      with:
-        crate: wasm-bindgen-cli
+      - name: Install wasm-bindgen-cli from crates.io
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: wasm-bindgen-cli
 
-    - name: Test Webapp
-      run: cargo test --package yew_csr
+      - name: Test Webapp
+        run: cargo test --package yew_csr
 
   test-webapp-axum:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
 
-    - name: Test Webapp
-      run: cargo test --package axum_htmx
+      - name: Test Webapp
+        run: cargo test --package axum_htmx
+
+  test-macro_utils:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: Test macro_utils
+        run: cargo test --package macro_utils
